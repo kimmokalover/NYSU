@@ -64,7 +64,7 @@ def turn_on_airconditioner(request):
 def emergency(request):
     if request.method == 'POST':
         # 에어컨 제어 실패 여부를 판단하여 처리
-        airconditioner_status = request.data.get('airconditioner_status', False)
+        airconditioner_status = request.data.get('airconditioner_status')
         license_plate = request.data.get('license_plate')
         temperature = request.data.get('temperature')
         
@@ -73,7 +73,7 @@ def emergency(request):
         except User.DoesNotExist:
             return Response({'message': '해당하는 사용자 정보가 없습니다.'}, status=404)
 
-        if not airconditioner_status:
+        if airconditioner_status == '0':
             # 에어컨 제어 실패시, 응급상황으로 처리하고, HTTP 201 Created 상태코드와 함께 응답
             user_info = {'name': user.name, 'age': user.age, 'phone': user.contact_number, 'email': user.email, 'status': 3, 'license_plate': user.license_plate, 'temperature': temperature}
             subprocess.run(["python", program_path, json.dumps(user_info)])
