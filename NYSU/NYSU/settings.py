@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-6vsr8g1hb&#_^g(s16a!6sqec(ftj=jpre28il(2#%aa#^%y7=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['nysu-awolm.run.goorm.io']
 
 
 # Application definition
