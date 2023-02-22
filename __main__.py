@@ -4,6 +4,7 @@ import serial
 from sound_classifier_model.test import predict
 import requests
 import time
+from Detector.detect import detect_person_or_dog
 
 child_or_pet = False
 license_plate = '1234'
@@ -38,6 +39,13 @@ def main():
 
     while True:
         if not child_or_pet:
+            #카메라로 감지하기
+            child_or_pet = detect_person_or_dog()
+            if child_or_pet:
+                url = 'https://nysu-awolm.run.goorm.site/api/child_or_pet_in_car/'
+                data = {'child_or_pet':child_or_pet, 'license_plate':license_plate}
+                send_child_or_pet_in_car(url, data)
+                continue
             # 녹음 시작
             print("녹음을 시작합니다.")
             recording = sd.rec(int(duration * fs), samplerate=fs, channels=channels)
@@ -53,7 +61,7 @@ def main():
             if predict_class == "dog_bark":
                 # 부모나 보호자에게 차량에 반려견이 존재한다고 알림 메세지 전송
                 child_or_pet = True
-                url = 'http://127.0.0.1:8000/api/child_or_pet_in_car/'
+                url = 'https://nysu-awolm.run.goorm.site/api/child_or_pet_in_car/'
                 data = {'child_or_pet':child_or_pet, 'license_plate':license_plate}
                 print(send_child_or_pet_in_car(url, data))
 
@@ -66,22 +74,23 @@ def main():
             print(Data)
             ser.flushInput()
             if child_or_pet == True and Data >= 40:
-                url = 'http://127.0.0.1:8000/api/turn_on_airconditioner/'
-                data = {'child_or_pet':child_or_pet, 'license_plate':license_plate, 'temperature':Data}
-                print(turn_on_airconditioner(url, data))
+                url = 'https://nysu-awolm.run.goorm.site/api/turn_on_airconditioner/'
+                data = {'temperature':Data,'child_or_pet':child_or_pet, 'license_plate':license_plate}
+                ret = turn_on_airconditioner(url, data)
+                print(ret)
                 
                 
-                time.sleep(5)
+                time.sleep(10)
                 ser.flushInput()
                 Data = ser.readline().decode().rstrip()
                 Data = float(Data)
                 if Data >= 40:
-                    url = 'http://127.0.0.1:8000/api/emergency/'
+                    url = 'https://nysu-awolm.run.goorm.site/api/emergency/'
                     data = {'child_or_pet':child_or_pet, 'license_plate':license_plate, 'temperature':Data, 'airconditioner_status':'0'}
                     print(emergency(url,data))
                 #에어컨 시스템 제동 실패
                 else :
-                    url = 'http://127.0.0.1:8000/api/emergency/'
+                    url = 'https://nysu-awolm.run.goorm.site/api/emergency/'
                     data = {'child_or_pet':child_or_pet, 'license_plate':license_plate, 'temperature':Data, 'airconditioner_status':'1'}
                     print(emergency(url,data))
 
