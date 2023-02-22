@@ -1,5 +1,5 @@
 import React from "react";
-// import axios from "axios";
+import axios from "axios";
 
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -10,6 +10,8 @@ import Button from "@mui/material/Button";
 import "./Main.scss";
 
 export default function MainPageContainer() {
+  const API_KEY = process.env.API_KEY as string;
+
   const [data, setData] = React.useState({
     license_plate: "",
     name: "",
@@ -32,6 +34,24 @@ export default function MainPageContainer() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log(data);
+    axios
+      .post(API_KEY, data)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setData({
+      license_plate: "",
+      name: "",
+      age: "",
+      address: "",
+      contact_number: "",
+      first_responder: "",
+      vehicle_type: "",
+      email: "",
+    });
   };
 
   return (
@@ -51,6 +71,7 @@ export default function MainPageContainer() {
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
+                  name="license_plate"
                   placeholder="License Code"
                   inputProps={{ "aria-label": "license_plate" }}
                   onChange={handleInputChange}
@@ -61,6 +82,7 @@ export default function MainPageContainer() {
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
+                  name="name"
                   placeholder="Name"
                   inputProps={{ "aria-label": "name" }}
                   onChange={handleInputChange}
@@ -71,6 +93,7 @@ export default function MainPageContainer() {
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
+                  name="age"
                   placeholder="Age"
                   inputProps={{ "aria-label": "age" }}
                   onChange={handleInputChange}
@@ -80,6 +103,7 @@ export default function MainPageContainer() {
             <Grid item>
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
+                  name="address"
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Address"
                   inputProps={{ "aria-label": "address" }}
@@ -90,6 +114,7 @@ export default function MainPageContainer() {
             <Grid item>
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
+                  name="contact_number"
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Phone Number"
                   inputProps={{ "aria-label": "contact_number" }}
@@ -100,6 +125,7 @@ export default function MainPageContainer() {
             <Grid item>
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
+                  name="first_responder"
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Emergency Phone Number"
                   inputProps={{ "aria-label": "first_responder" }}
@@ -110,6 +136,7 @@ export default function MainPageContainer() {
             <Grid item>
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
+                  name="vehicle_type"
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Vehicle Type"
                   inputProps={{ "aria-label": "vehicle_type" }}
@@ -120,6 +147,7 @@ export default function MainPageContainer() {
             <Grid item>
               <Paper sx={{ width: "20vw", height: "5vh", borderRadius: 3 }}>
                 <InputBase
+                  name="email"
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Email Address"
                   inputProps={{ "aria-label": "email" }}
