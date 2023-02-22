@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import subprocess
 import json
-
+from .serializers import UserSerializer
 
 # e-mail 보내는 프로그램의 위치
 program_path = "/home/kimmokalover/바탕화면/hackerton/sendemail.py"
@@ -83,3 +83,15 @@ def emergency(request):
             user_info = {'name': user.name, 'age': user.age, 'phone': user.contact_number, 'email': user.email, 'status': 4, 'license_plate': user.license_plate, 'temperature': temperature}
             subprocess.run(["python", program_path, json.dumps(user_info)])
             return Response({'message': '에어컨 제어가 정상적으로 이루어졌습니다.'}, status=400)
+
+
+
+@api_view(['POST'])
+def save_user_info(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
