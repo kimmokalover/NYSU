@@ -142,3 +142,10 @@ February 22, 2023 - 10:25:04
 Django version 3.2.18, using settings 'NYSU.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
+Watching for file changes with StatReloader
+Not Found: /
+[22/Feb/2023 10:42:27] "GET / HTTP/1.1" 404 2170
+Not Found: /favicon.ico
+[22/Feb/2023 10:42:27] "GET /favicon.ico HTTP/1.1" 404 2221
+Not Found: /api/
+[22/Feb/2023 10:42:32] "GET /api/ HTTP/1.1" 404 2602
