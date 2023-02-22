@@ -22,16 +22,16 @@ def extract_feature(file_name):
 
 def predict():
     # Load the model
-    loaded_model = keras.models.load_model('/home/kimmokalover/바탕화면/hackerton/sound_classifier_model/sound_classifier_model')
+    loaded_model = keras.models.load_model('/home/kimmokalover/바탕화면/hackerton/sound_classifier_model/')
 
     filename = "/home/kimmokalover/바탕화면/hackerton/recorded.wav"
     mfccs = extract_feature(filename)
     # print(mfccs)
     mfccs = np.reshape(mfccs, (-1, 40, 174, 1))
     predictions = loaded_model.predict(mfccs)
-    class_names = ["air_conditioner", "car_horn", "children_playing", "dog_bark", "drilling", "engine", "gun_shot", "jackhammer", "siren", "street_music"]
+    class_names = ["air_conditioner", "car_horn", "children_playing", "dog_bark", "drilling", "engine", "gun_shot", "jackhammer", "siren", "street_music", "baby_crying"]
     print("------------------------------------------------------")
-    # print(predictions)
+    print(predictions)
 
     predicted_index = np.argmax(predictions)
     predicted_class = class_names[predicted_index]
