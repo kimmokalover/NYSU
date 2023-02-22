@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 def send_email(user_info):
     # 이메일을 보낼 계정 정보 입력
     user = 'kimmokalover@naver.com'
-    password = '!levelup124'
+    password = 'password'
 
     # 이메일을 보낼 대상 정보 입력
     recipient = user_info['email']
