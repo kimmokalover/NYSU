@@ -5,10 +5,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import subprocess
 import json
-
+from .serializers import UserSerializer
 
 # e-mail 보내는 프로그램의 위치
-program_path = "/home/kimmokalover/바탕화면/hackerton/sendemail.py"
+program_path = "/workspace/NYSU/sendemail.py"
 
 @api_view(['POST'])
 def child_or_pet_in_car(request):
@@ -83,3 +83,37 @@ def emergency(request):
             user_info = {'name': user.name, 'age': user.age, 'phone': user.contact_number, 'email': user.email, 'status': 4, 'license_plate': user.license_plate, 'temperature': temperature}
             subprocess.run(["python", program_path, json.dumps(user_info)])
             return Response({'message': '에어컨 제어가 정상적으로 이루어졌습니다.'}, status=400)
+
+
+
+@api_view(['POST'])
+def save_user_info(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+        
+@api_view(['POST'])
+def child_or_pet_in_car_by_camera(request):
+    if request.method == 'POST':
+        child_or_pet = request.data.get('child_or_pet',True)
+        license_plate = request.data.get('license_plate')
+        if child_or_pet:
+            # 해당 정보를 처리하고, HTTP 201 Created 상태코드와 함께 응답
+            try:
+                user = User.objects.get(license_plate=license_plate)
+            except User.DoesNotExist:
+                return Response({'message': '해당하는 사용자 정보가 없습니다.'}, status=404)
+
+            # e-mail 프로그램 실행
+            user_info = {'name': user.name, 'age': user.age, 'phone': user.contact_number, 'email': user.email, 'status': 1, 'license_plate': user.license_plate}
+            subprocess.run(["python", program_path, json.dumps(user_info)])
+
+            return Response({'message': '아이나 반려동물이 차 안에 있습니다.', 'license_plate' : license_plate, 'status' : 1}, status=201)
+        else:
+            # HTTP 400 Bad Request 상태코드와 함께 응답
+            return Response({'message': '아이나 반려동물이 차 안에 없습니다.'}, status=400)
+
