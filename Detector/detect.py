@@ -24,9 +24,6 @@ cap = cv2.VideoCapture(0)
 car_num = 1234
 
 # 감지 상태
-baby_count = 0
-dog_count = 0
-
 baby_detect = False
 dog_detect = False
 
@@ -60,38 +57,18 @@ while(True):
         if(l[i] == "person"): current_baby_count += 1
         if(l[i] == "dog"): current_dog_count += 1
 
-    if baby_count != current_baby_count:
-        state = ""
-
-        if baby_count > current_baby_count:
-            state = f"Remove Baby {baby_count - current_baby_count}"
-            baby_count = current_baby_count
-        else:
-            state = f"Add Baby {current_baby_count - baby_count}"
-            baby_count = current_baby_count
-
-        data = {
-            "license_plate": car_num,
-            "exist_state": state
-        }
-
+    if "person" in label and baby_detect == False:
+        baby_detect = True
         response = requests.post(api, data=data)
-    
-    if dog_count != current_dog_count:
-        state = ""
+    if "dog" in label and dog_detect == False:
+        dog_detect = True
+        response = requests.post(api, data=data)
 
-        if dog_count > current_dog_count:
-            state = f"Remove Dog {dog_count - current_dog_count}"
-            dog_count = current_dog_count
-        else:
-            state = f"Add Dog {current_dog_count - dog_count}"
-            dog_count = current_dog_count
-
-        data = {
-            "license_plate": car_num,
-            "exist_state": state
-        }
-
+    if not "person" in label and baby_detect:
+        baby_detect = False
+        response = requests.post(api, data=data)
+    if not "dog" in label and dog_detect:
+        dog_detect = False
         response = requests.post(api, data=data)
 
 
